@@ -15,23 +15,14 @@ import retrofit2.converter.moshi.MoshiConverterFactory
  */
 class Controller {
 
-    private lateinit var retrofit :Retrofit
     private val TAG = "Controller"
 
-
-    private fun buildService(): YCombinatorService {
-        val retrofit = Retrofit.Builder()
-                .baseUrl("https://hacker-news.firebaseio.com/v0/")
-                .addConverterFactory(MoshiConverterFactory.create())
-                .build()
-
-        return retrofit.create(YCombinatorService::class.java)
-    }
 
 
 
     fun getTopStories(receiver: ItemReceiver) {
-        buildService().topStories().enqueue(object: Callback<List<Int>> {
+
+        YCombinatorService.getInstance()?.topStories()?.enqueue(object: Callback<List<Int>> {
 
             override fun onFailure(call: Call<List<Int>>, t: Throwable) {
                 Log.e(TAG, "Failed to get list of top stories")
@@ -49,7 +40,7 @@ class Controller {
 
     fun getItem(itemNum: Int, receiver: ItemReceiver) {
 
-        buildService().getItem(itemNum).enqueue(object: Callback<Item> {
+        YCombinatorService.getInstance()?.getItem(itemNum)?.enqueue(object: Callback<Item> {
             override fun onFailure(call: Call<Item>, t: Throwable) {
                 Log.e(TAG, "Failed to get item")
             }

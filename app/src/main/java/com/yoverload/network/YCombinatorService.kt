@@ -2,6 +2,8 @@ package com.yoverload.network
 
 import com.yoverload.Item
 import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -11,6 +13,27 @@ import retrofit2.http.Query
  * Created by tom.egan on 03-Jan-2019.
  */
 interface YCombinatorService {
+
+    companion object {
+        @Volatile
+        private var retrofit : Retrofit? = null
+
+        private const val BASE_URL: String = "https://hacker-news.firebaseio.com/v0/"
+
+        @Synchronized
+        fun getInstance(): YCombinatorService? {
+            retrofit ?: synchronized(this) {
+                retrofit ?: buildRetrofit()
+            }
+
+            return retrofit?.create(YCombinatorService::class.java)
+        }
+
+        private fun buildRetrofit() = Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(MoshiConverterFactory.create())
+                .build()
+    }
 
     // The current largest item id is at /v0/maxitem. You can walk backward from here to discover all items.
     @GET("maxitem.json")
