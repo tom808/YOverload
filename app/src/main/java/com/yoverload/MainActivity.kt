@@ -16,7 +16,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 /**
  * Created by tom.egan on 03-Jan-2019.
  */
-class MainActivity() : AppCompatActivity(), Callback<Int> {
+class MainActivity() : AppCompatActivity(), Callback<List<Int>> {
 
     private lateinit var tvMaxItem: TextView
     private val TAG = "MainActivity"
@@ -47,12 +47,12 @@ class MainActivity() : AppCompatActivity(), Callback<Int> {
                 .build()
 
         val service = retrofit.create(YCombinatorService::class.java)
-        val call = service.getLatest()
+        val call = service.topStories()
         call.enqueue(this)
     }
 
 
-    override fun onResponse(call: Call<Int>, response: Response<Int>) {
+    override fun onResponse(call: Call<List<Int>>, response: Response<List<Int>>) {
         Log.i(TAG, "onResponse called")
         response.body()?.let {
             val body = response.body()
@@ -60,7 +60,7 @@ class MainActivity() : AppCompatActivity(), Callback<Int> {
         }
     }
 
-    override fun onFailure(call: Call<Int>, t: Throwable) {
+    override fun onFailure(call: Call<List<Int>>, t: Throwable) {
         Log.i(TAG, "onFailure called")
         tvMaxItem.setText(getString(R.string.failed))
     }
