@@ -1,5 +1,6 @@
-package com.yoverload
+package com.yoverload.network
 
+import com.yoverload.Item
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -22,5 +23,5 @@ interface YCombinatorService {
     // Stories, comments, jobs, Ask HNs and even polls are just items.
     // They're identified by their ids, which are unique integers, and live under /v0/item/<id>
     @GET("item/{item}.json")
-    fun getItem(@Path("item") item: String, @Query("print") print: String = "pretty"): Call<Item>
+    fun getItem(@Path("item") item: Int, @Query("print") print: String = "pretty"): Call<Item>
 }
