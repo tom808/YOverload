@@ -4,10 +4,15 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+            <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/main_progress_bar"
+                    />
 
               <TextView
-
                       android:text="Test!"
+                      android:visibility="gone"
                       android:id="@+id/maxItem"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"/>

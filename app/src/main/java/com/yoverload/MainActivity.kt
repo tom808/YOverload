@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import com.yoverload.network.Controller
 
@@ -12,6 +14,8 @@ import com.yoverload.network.Controller
  * Created by tom.egan on 03-Jan-2019.
  */
 class MainActivity() : AppCompatActivity(), ItemReceiver {
+
+    private var itemCount = 0
 
     private lateinit var tvItems: TextView
     private val TAG = "MainActivity"
@@ -38,6 +42,13 @@ class MainActivity() : AppCompatActivity(), ItemReceiver {
 
     override fun receiveItem(item: Item) {
         Log.i(TAG, "Receieved item " + item.id)
+        itemCount++
         tvItems.append(item.title)
+
+        if (itemCount > 20) {
+            val pgProgress = findViewById<ProgressBar>(R.id.main_progress_bar)
+            pgProgress.visibility = View.GONE
+            tvItems.visibility = View.VISIBLE
+        }
     }
 }
