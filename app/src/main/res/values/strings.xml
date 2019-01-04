@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">YOverload</string>
     <string name="failed">Failed</string>
+    <string name="refresh">Refresh</string>
 </resources>

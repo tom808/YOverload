@@ -9,7 +9,7 @@ import retrofit2.http.Path
  * Created by tom.egan on 03-Jan-2019.
  */
 interface YCombinatorService {
-    @GET("maxitem")
+    @GET("maxitem.json?print=pretty")
     fun getLatest(): Call<Int>
 
     @GET("item/{item}.json?print=pretty")
