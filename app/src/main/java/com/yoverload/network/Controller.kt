@@ -3,13 +3,10 @@ package com.yoverload.network
 import android.util.Log
 import com.yoverload.Item
 import com.yoverload.ItemReceiver
-import com.yoverload.R
-import com.yoverload.ifNull
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+
 /**
  * Created by tom.egan on 04-Jan-2019.
  */
@@ -18,35 +15,34 @@ class Controller {
     private val TAG = "Controller"
 
 
-
-
     fun getTopStories(receiver: ItemReceiver) {
 
-        YCombinatorService.getInstance()?.topStories()?.enqueue(object: Callback<List<Int>> {
+        val instance = YCombinatorService.getInstance()
 
-            override fun onFailure(call: Call<List<Int>>, t: Throwable) {
+        instance?.topStories()?.enqueue(object : Callback<List<Int>> {
+
+            override fun onFailure(call: Call<List<Int>>?, t: Throwable) {
                 Log.e(TAG, "Failed to get list of top stories")
             }
 
-            override fun onResponse(call: Call<List<Int>>, response: Response<List<Int>>) {
-                response.body()?.let {
-                    val items : List<Int> = response.body()
-                    items.forEach { getItem(it, receiver) }
+            override fun onResponse(call: Call<List<Int>>?, response: Response<List<Int>>) {
+                val items: List<Int> = response.body()!!
+                items.forEach { getItem(it, receiver) }
 
-                }
             }
         })
     }
 
     fun getItem(itemNum: Int, receiver: ItemReceiver) {
 
-        YCombinatorService.getInstance()?.getItem(itemNum)?.enqueue(object: Callback<Item> {
+        YCombinatorService.getInstance()?.getItem(itemNum)?.enqueue(object : Callback<Item> {
             override fun onFailure(call: Call<Item>, t: Throwable) {
                 Log.e(TAG, "Failed to get item")
             }
 
             override fun onResponse(call: Call<Item>, response: Response<Item>) {
-                response.body()?.let { receiver.receiveItem(it) }
+                val item: Item = response.body()!!
+                receiver.receiveItem(item)
             }
         })
     }

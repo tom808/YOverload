@@ -23,7 +23,7 @@ interface YCombinatorService {
         @Synchronized
         fun getInstance(): YCombinatorService? {
             retrofit ?: synchronized(this) {
-                retrofit ?: buildRetrofit()
+                retrofit = buildRetrofit()
             }
 
             return retrofit?.create(YCombinatorService::class.java)

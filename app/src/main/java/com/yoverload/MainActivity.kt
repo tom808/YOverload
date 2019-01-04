@@ -2,6 +2,7 @@ package com.yoverload
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
@@ -36,6 +37,7 @@ class MainActivity() : AppCompatActivity(), ItemReceiver {
     }
 
     override fun receiveItem(item: Item) {
+        Log.i(TAG, "Receieved item " + item.id)
         tvItems.append(item.title)
     }
 }
