@@ -17,7 +17,7 @@ class MainActivity() : AppCompatActivity(), ItemReceiver {
 
     private var itemCount = 0
 
-    private lateinit var tvItems: TextView
+    private var tvItems: TextView = findViewById(R.id.maxItem)
     private val TAG = "MainActivity"
     private val controller = Controller()
 
@@ -25,7 +25,6 @@ class MainActivity() : AppCompatActivity(), ItemReceiver {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_layout)
-        tvItems = findViewById(R.id.maxItem)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
