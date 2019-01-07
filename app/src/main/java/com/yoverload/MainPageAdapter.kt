@@ -11,7 +11,7 @@ import android.widget.TextView
  */
 class MainPageAdapter : RecyclerView.Adapter<MainPageAdapter.MainPageAdapterViewHolder>() {
 
-    private var listItems : List<Item>? = null
+    private var listItems : MutableList<Item>? = null
 
     class MainPageAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val itemText = itemView.findViewById<TextView>(R.id.tv_list_item)
@@ -19,8 +19,8 @@ class MainPageAdapter : RecyclerView.Adapter<MainPageAdapter.MainPageAdapterView
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType : Int): MainPageAdapterViewHolder {
         val layoutInflater = LayoutInflater.from(viewGroup.context)
-        layoutInflater.inflate(R.layout.list_item, viewGroup, false)
-        return MainPageAdapterViewHolder(viewGroup)
+        val itemView = layoutInflater.inflate(R.layout.list_item, viewGroup, false)
+        return MainPageAdapterViewHolder(itemView)
     }
 
     override fun getItemCount(): Int {
@@ -31,7 +31,14 @@ class MainPageAdapter : RecyclerView.Adapter<MainPageAdapter.MainPageAdapterView
         viewHolder.itemText.text = listItems?.get(position)?.title ?: ""
     }
 
-    fun setPageData (items: List<Item>) {
+    fun setPageData (items: MutableList<Item>) {
         listItems = items
+    }
+
+    fun setPageData (item: Item) {
+        listItems?:let {
+            listItems = ArrayList<Item>()
+        }
+        listItems?.add(item)
     }
 }
