@@ -1,8 +1,10 @@
-package com.yoverload.network
+package com.yoverload
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import android.util.Log
-import com.yoverload.Item
-import com.yoverload.ItemReceiver
+import com.yoverload.network.Item
+import com.yoverload.network.YCombinatorService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -10,14 +12,15 @@ import retrofit2.Response
 /**
  * Created by tom.egan on 04-Jan-2019.
  */
-class Controller {
+class ItemRepository {
 
-    private val TAG = "Controller"
+    private val TAG = "ItemRepository"
 
 
-    fun getTopStories(receiver: ItemReceiver) {
+    fun getTopStories() : LiveData<MutableList<Item>> {
 
         val instance = YCombinatorService.getInstance()
+        val data = MutableLiveData<MutableList<Item>>()
 
         instance?.topStories()?.enqueue(object : Callback<List<Int>> {
 
@@ -27,13 +30,15 @@ class Controller {
 
             override fun onResponse(call: Call<List<Int>>?, response: Response<List<Int>>) {
                 val items: List<Int> = response.body()!!
-                items.forEach { getItem(it, receiver) }
+                items.forEach { getItem(it, data) }
 
             }
         })
+
+        return data
     }
 
-    fun getItem(itemNum: Int, receiver: ItemReceiver) {
+    fun getItem(itemNum: Int, data: MutableLiveData<MutableList<Item>>) {
 
         YCombinatorService.getInstance()?.getItem(itemNum)?.enqueue(object : Callback<Item> {
             override fun onFailure(call: Call<Item>, t: Throwable) {
@@ -42,24 +47,10 @@ class Controller {
 
             override fun onResponse(call: Call<Item>, response: Response<Item>) {
                 val item: Item = response.body()!!
-                receiver.receiveItem(item)
+                data.value?.add(item)
             }
         })
     }
 
-    /*
-
-    override fun onResponse(call: Call<List<Int>>, response: Response<List<Int>>) {
-        response.body()?.let {
-            val body = response.body()
-            tvMaxItem.setText(body.toString())
-        }
-    }
-
-    override fun onFailure(call: Call<List<Int>>, t: Throwable) {
-        tvMaxItem.setText(getString(R.string.failed))
-    }
-
-    */
 
 }

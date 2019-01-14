@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.yoverload.network.Item
 
 /**
  * Created by tom.egan on 07-Jan-2019.
@@ -33,6 +34,7 @@ class MainPageAdapter : RecyclerView.Adapter<MainPageAdapter.MainPageAdapterView
 
     fun setPageData (items: MutableList<Item>) {
         listItems = items
+        notifyDataSetChanged()
     }
 
     fun setPageData (item: Item) {
@@ -40,5 +42,6 @@ class MainPageAdapter : RecyclerView.Adapter<MainPageAdapter.MainPageAdapterView
             listItems = ArrayList<Item>()
         }
         listItems?.add(item)
+        notifyDataSetChanged()
     }
 }

@@ -1,5 +1,7 @@
 package com.yoverload
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -9,7 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
-import com.yoverload.network.Controller
+import com.yoverload.network.Item
 
 /**
  * Created by tom.egan on 03-Jan-2019.
@@ -19,7 +21,7 @@ class MainActivity() : AppCompatActivity(), ItemReceiver {
     private var itemCount = 0
 
     private val TAG = "MainActivity"
-    private val mController = Controller()
+    private var mViewModel : MainPageViewModel = ViewModelProviders.of(this).get(MainPageViewModel::class.java)
     private val mAdapter = MainPageAdapter()
     private  lateinit var mRecyclerView : RecyclerView
 
@@ -28,8 +30,12 @@ class MainActivity() : AppCompatActivity(), ItemReceiver {
         super.onCreate(savedInstanceState)
 
         setUprecyclerView()
-        // Load the data
-        mController.getTopStories(this)
+
+        mViewModel.items?.observe(this, Observer { items ->
+            items?.let {
+                mAdapter.setPageData(items)
+            }
+        })
     }
 
     private fun setUprecyclerView() {
@@ -49,7 +55,7 @@ class MainActivity() : AppCompatActivity(), ItemReceiver {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.action_refresh) {
-            mController.getTopStories(this)
+            // mController.getTopStories(this)
         }
         return true
     }

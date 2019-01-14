@@ -1,4 +1,4 @@
-package com.yoverload
+package com.yoverload.network
 
 data class Item(
         val by: String,
