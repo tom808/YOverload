@@ -1,6 +1,5 @@
-package com.yoverload
+package com.yoverload.data
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import com.yoverload.network.Item
@@ -27,7 +26,8 @@ class ItemRepository private constructor(){
 
         fun getInstance() =
             instance ?: synchronized(this) {
-                instance ?: ItemRepository().also { instance = it }
+                instance
+                        ?: ItemRepository().also { instance = it }
             }
     }
 

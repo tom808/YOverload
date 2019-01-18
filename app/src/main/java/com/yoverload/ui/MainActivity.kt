@@ -1,4 +1,4 @@
-package com.yoverload
+package com.yoverload.ui
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -10,6 +10,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
+import com.yoverload.di.InjectorUtils
+import com.yoverload.R
 
 /**
  * Created by tom.egan on 03-Jan-2019.

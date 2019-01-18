@@ -1,4 +1,6 @@
-package com.yoverload
+package com.yoverload.di
+
+import com.yoverload.data.ItemRepository
 
 /**
  * Created by tom on 18-Jan-2019.
