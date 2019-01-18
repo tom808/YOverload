@@ -6,12 +6,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
-import com.yoverload.network.Item
 
 /**
  * Created by tom.egan on 03-Jan-2019.
@@ -22,35 +20,38 @@ class MainActivity() : AppCompatActivity() {
 
     private val TAG = "MainActivity"
     private val mAdapter = MainPageAdapter()
-    private lateinit var mRecyclerView: RecyclerView
+    private var mRecyclerView: RecyclerView? = null
+    private val pgProgress: ProgressBar by lazy {
+        findViewById<ProgressBar>(R.id.main_progress_bar)
+    }
+    private val mViewModel: MainPageViewModel by lazy {
+        val factory = InjectorUtils.provideMainPageViewModelFactory()
+        ViewModelProviders.of(this, factory).get(MainPageViewModel::class.java)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setUprecyclerView()
+        setUpRecyclerView()
 
-        val factory = InjectorUtils.provideMainPageViewModelFactory()
-        val viewModel = ViewModelProviders.of(this, factory).get(MainPageViewModel::class.java)
-
-        viewModel.getTopStories().observe(this, Observer { items ->
+        mViewModel.getTopStories().observe(this, Observer { items ->
             items?.let {
                 mAdapter.setPageData(items)
-                val pgProgress = findViewById<ProgressBar>(R.id.main_progress_bar)
                 pgProgress.visibility = View.GONE
-                mRecyclerView.visibility = View.VISIBLE
+                mRecyclerView?.visibility = View.VISIBLE
             }
         })
     }
 
-    private fun setUprecyclerView() {
+    private fun setUpRecyclerView() {
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         setContentView(R.layout.main_layout)
         mRecyclerView = findViewById(R.id.rv_main_items)
-        mRecyclerView.layoutManager = layoutManager
-        mRecyclerView.setHasFixedSize(true)
-        mRecyclerView.adapter = mAdapter
+        mRecyclerView?.layoutManager = layoutManager
+        mRecyclerView?.setHasFixedSize(true)
+        mRecyclerView?.adapter = mAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -60,7 +61,9 @@ class MainActivity() : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.action_refresh) {
-            // mController.getTopStories(this)
+            pgProgress.visibility = View.VISIBLE
+            mRecyclerView?.visibility = View.GONE
+            mViewModel.getTopStories()
         }
         return true
     }
