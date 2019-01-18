@@ -31,7 +31,7 @@ class MainPageAdapter : RecyclerView.Adapter<MainPageAdapter.MainPageAdapterView
     override fun getItemCount(): Int = listItems.size
 
     override fun onBindViewHolder(viewHolder: MainPageAdapterViewHolder, position: Int) {
-        viewHolder.itemText.text = listItems?.get(position)?.title ?: ""
+        viewHolder.itemText.text = listItems.get(position).title
     }
 
     fun setPageData (items: MutableList<Item>) {
