@@ -12,7 +12,11 @@ import com.yoverload.network.Item
  */
 class MainPageAdapter : RecyclerView.Adapter<MainPageAdapter.MainPageAdapterViewHolder>() {
 
-    private var listItems : MutableList<Item>? = null
+    private var listItems : MutableList<Item>
+
+    init {
+        listItems = mutableListOf()// doing this for now?
+    }
 
     class MainPageAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val itemText = itemView.findViewById<TextView>(R.id.tv_list_item)
@@ -24,9 +28,7 @@ class MainPageAdapter : RecyclerView.Adapter<MainPageAdapter.MainPageAdapterView
         return MainPageAdapterViewHolder(itemView)
     }
 
-    override fun getItemCount(): Int {
-        return listItems?.size ?: 0
-    }
+    override fun getItemCount(): Int = listItems.size
 
     override fun onBindViewHolder(viewHolder: MainPageAdapterViewHolder, position: Int) {
         viewHolder.itemText.text = listItems?.get(position)?.title ?: ""
@@ -38,10 +40,7 @@ class MainPageAdapter : RecyclerView.Adapter<MainPageAdapter.MainPageAdapterView
     }
 
     fun setPageData (item: Item) {
-        listItems?:let {
-            listItems = ArrayList<Item>()
-        }
-        listItems?.add(item)
+        listItems.add(item)
         notifyDataSetChanged()
     }
 }

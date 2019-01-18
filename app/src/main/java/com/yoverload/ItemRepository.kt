@@ -12,17 +12,30 @@ import retrofit2.Response
 /**
  * Created by tom.egan on 04-Jan-2019.
  */
-class ItemRepository {
+class ItemRepository private constructor(){
 
     private val TAG = "ItemRepository"
 
+    private val data = MutableLiveData<MutableList<Item>>()
 
-    fun getTopStories() : LiveData<MutableList<Item>> {
+    init {
+        data.value = mutableListOf()
+    }
 
-        val instance = YCombinatorService.getInstance()
-        val data = MutableLiveData<MutableList<Item>>()
+    companion object {
+        @Volatile private var instance: ItemRepository? = null
 
-        instance?.topStories()?.enqueue(object : Callback<List<Int>> {
+        fun getInstance() =
+            instance ?: synchronized(this) {
+                instance ?: ItemRepository().also { instance = it }
+            }
+    }
+
+
+    fun getTopStories() : MutableLiveData<MutableList<Item>>{
+
+        // TODO this should come from a DAO and be injected in!
+        YCombinatorService().topStories().enqueue(object : Callback<List<Int>> {
 
             override fun onFailure(call: Call<List<Int>>?, t: Throwable) {
                 Log.e(TAG, "Failed to get list of top stories")
@@ -30,17 +43,19 @@ class ItemRepository {
 
             override fun onResponse(call: Call<List<Int>>?, response: Response<List<Int>>) {
                 val items: List<Int> = response.body()!!
-                items.forEach { getItem(it, data) }
+                items.forEach { getItem(it) }
 
             }
         })
 
+
         return data
+
     }
 
-    fun getItem(itemNum: Int, data: MutableLiveData<MutableList<Item>>) {
+    fun getItem(itemNum: Int) {
 
-        YCombinatorService.getInstance()?.getItem(itemNum)?.enqueue(object : Callback<Item> {
+        YCombinatorService().getItem(itemNum).enqueue(object : Callback<Item> {
             override fun onFailure(call: Call<Item>, t: Throwable) {
                 Log.e(TAG, "Failed to get item")
             }
@@ -48,6 +63,7 @@ class ItemRepository {
             override fun onResponse(call: Call<Item>, response: Response<Item>) {
                 val item: Item = response.body()!!
                 data.value?.add(item)
+                data.value = data.value // so we actually notify observers
             }
         })
     }

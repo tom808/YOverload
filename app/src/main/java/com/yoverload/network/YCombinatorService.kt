@@ -14,24 +14,15 @@ import retrofit2.http.Query
 interface YCombinatorService {
 
     companion object {
-        @Volatile
-        private var retrofit : Retrofit? = null
-
         private const val BASE_URL: String = "https://hacker-news.firebaseio.com/v0/"
 
-        @Synchronized
-        fun getInstance(): YCombinatorService? {
-            retrofit ?: synchronized(this) {
-                retrofit = buildRetrofit()
-            }
-
-            return retrofit?.create(YCombinatorService::class.java)
+        operator fun invoke(): YCombinatorService {
+            return Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(MoshiConverterFactory.create())
+                    .build()
+                    .create(YCombinatorService::class.java)
         }
-
-        private fun buildRetrofit() = Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(MoshiConverterFactory.create())
-                .build()
     }
 
     // The current largest item id is at /v0/maxitem. You can walk backward from here to discover all items.

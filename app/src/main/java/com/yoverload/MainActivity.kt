@@ -16,14 +16,13 @@ import com.yoverload.network.Item
 /**
  * Created by tom.egan on 03-Jan-2019.
  */
-class MainActivity() : AppCompatActivity(), ItemReceiver {
+class MainActivity() : AppCompatActivity() {
 
     private var itemCount = 0
 
     private val TAG = "MainActivity"
-    private var mViewModel : MainPageViewModel = ViewModelProviders.of(this).get(MainPageViewModel::class.java)
     private val mAdapter = MainPageAdapter()
-    private  lateinit var mRecyclerView : RecyclerView
+    private lateinit var mRecyclerView: RecyclerView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,9 +30,15 @@ class MainActivity() : AppCompatActivity(), ItemReceiver {
 
         setUprecyclerView()
 
-        mViewModel.items?.observe(this, Observer { items ->
+        val factory = InjectorUtils.provideMainPageViewModelFactory()
+        val viewModel = ViewModelProviders.of(this, factory).get(MainPageViewModel::class.java)
+
+        viewModel.getTopStories().observe(this, Observer { items ->
             items?.let {
                 mAdapter.setPageData(items)
+                val pgProgress = findViewById<ProgressBar>(R.id.main_progress_bar)
+                pgProgress.visibility = View.GONE
+                mRecyclerView.visibility = View.VISIBLE
             }
         })
     }
@@ -60,16 +65,4 @@ class MainActivity() : AppCompatActivity(), ItemReceiver {
         return true
     }
 
-    override fun receiveItem(item: Item) {
-        Log.i(TAG, "Received item " + item.id)
-
-        mAdapter.setPageData(item)
-        mAdapter.notifyDataSetChanged()
-
-        if (mAdapter.itemCount > 5) {
-            val pgProgress = findViewById<ProgressBar>(R.id.main_progress_bar)
-            pgProgress.visibility = View.GONE
-            mRecyclerView.visibility = View.VISIBLE
-        }
-    }
 }
