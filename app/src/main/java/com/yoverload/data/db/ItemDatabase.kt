@@ -9,7 +9,7 @@ import android.content.Context
  * Created by tom on 14-Jan-2019.
  */
 
-@Database(entities = [Item::class], version = 1)
+@Database(entities = [Item::class], version = 1, exportSchema = false)
 abstract class ItemDatabase : RoomDatabase() {
 
     companion object {
@@ -19,8 +19,7 @@ abstract class ItemDatabase : RoomDatabase() {
 
         fun getInstance(context: Context) : ItemDatabase {
             instance ?: synchronized(this) {
-                instance
-                        ?: Room.databaseBuilder(context, ItemDatabase::class.java, DATABASE_NAME).build()
+                instance = Room.databaseBuilder(context, ItemDatabase::class.java, DATABASE_NAME).build()
             }
 
             return instance!!

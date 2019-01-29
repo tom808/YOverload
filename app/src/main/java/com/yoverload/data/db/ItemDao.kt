@@ -16,5 +16,5 @@ interface ItemDao {
     fun save(item: Item)
 
     @Query("SELECT * FROM items")
-    fun loadAll(userId: Int): LiveData<List<Item>>
+    fun loadAll(): LiveData<List<Item>>
 }
