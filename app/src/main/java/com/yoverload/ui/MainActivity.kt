@@ -27,7 +27,7 @@ class MainActivity() : AppCompatActivity() {
         findViewById<ProgressBar>(R.id.main_progress_bar)
     }
     private val mViewModel: MainPageViewModel by lazy {
-        val factory = InjectorUtils.provideMainPageViewModelFactory()
+        val factory = InjectorUtils.provideMainPageViewModelFactory(this)
         ViewModelProviders.of(this, factory).get(MainPageViewModel::class.java)
     }
 

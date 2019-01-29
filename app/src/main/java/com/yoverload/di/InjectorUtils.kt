@@ -1,5 +1,6 @@
 package com.yoverload.di
 
+import android.content.Context
 import com.yoverload.data.ItemRepository
 
 /**
@@ -7,8 +8,8 @@ import com.yoverload.data.ItemRepository
  */
 object InjectorUtils {
 
-    fun provideMainPageViewModelFactory(): MainPageViewModelFactory {
-        val repository = ItemRepository.getInstance()
+    fun provideMainPageViewModelFactory(context: Context): MainPageViewModelFactory {
+        val repository = ItemRepository.getInstance(context)
         return MainPageViewModelFactory(repository)
     }
 

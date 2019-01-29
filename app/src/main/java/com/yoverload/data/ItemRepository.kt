@@ -1,7 +1,10 @@
 package com.yoverload.data
 
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import android.util.Log
+import com.yoverload.data.db.Item
+import com.yoverload.data.db.ItemDatabase
 import com.yoverload.network.YCombinatorService
 import retrofit2.Call
 import retrofit2.Callback
@@ -10,9 +13,11 @@ import retrofit2.Response
 /**
  * Created by tom.egan on 04-Jan-2019.
  */
-class ItemRepository private constructor() {
+class ItemRepository private constructor(context: Context) {
 
     private val TAG = "ItemRepository"
+
+    private val itemDb : ItemDatabase = ItemDatabase.getInstance(context)
 
     private val data = MutableLiveData<MutableList<Item>>()
 
@@ -24,10 +29,10 @@ class ItemRepository private constructor() {
         @Volatile
         private var instance: ItemRepository? = null
 
-        fun getInstance() =
+        fun getInstance(context: Context) =
                 instance ?: synchronized(this) {
                     instance
-                            ?: ItemRepository().also { instance = it }
+                            ?: ItemRepository(context).also { instance = it }
                 }
     }
 
