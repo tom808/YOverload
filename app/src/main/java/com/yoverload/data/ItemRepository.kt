@@ -1,8 +1,7 @@
 package com.yoverload.data
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import android.util.Log
-import com.yoverload.network.Item
 import com.yoverload.network.YCombinatorService
 import retrofit2.Call
 import retrofit2.Callback
@@ -11,7 +10,7 @@ import retrofit2.Response
 /**
  * Created by tom.egan on 04-Jan-2019.
  */
-class ItemRepository private constructor(){
+class ItemRepository private constructor() {
 
     private val TAG = "ItemRepository"
 
@@ -22,17 +21,18 @@ class ItemRepository private constructor(){
     }
 
     companion object {
-        @Volatile private var instance: ItemRepository? = null
+        @Volatile
+        private var instance: ItemRepository? = null
 
         fun getInstance() =
-            instance ?: synchronized(this) {
-                instance
-                        ?: ItemRepository().also { instance = it }
-            }
+                instance ?: synchronized(this) {
+                    instance
+                            ?: ItemRepository().also { instance = it }
+                }
     }
 
 
-    fun getTopStories() : MutableLiveData<MutableList<Item>>{
+    fun getTopStories(): MutableLiveData<MutableList<Item>> {
 
         // TODO this should come from a DAO and be injected in!
         YCombinatorService().topStories().enqueue(object : Callback<List<Int>> {
@@ -48,9 +48,7 @@ class ItemRepository private constructor(){
             }
         })
 
-
         return data
-
     }
 
     fun getItem(itemNum: Int) {

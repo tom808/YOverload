@@ -1,17 +1,17 @@
 package com.yoverload.ui
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.yoverload.R
-import com.yoverload.network.Item
+import com.yoverload.data.Item
 
 /**
  * Created by tom.egan on 07-Jan-2019.
  */
-class MainPageAdapter : RecyclerView.Adapter<MainPageAdapter.MainPageAdapterViewHolder>() {
+class MainPageAdapter : androidx.recyclerview.widget.RecyclerView.Adapter<MainPageAdapter.MainPageAdapterViewHolder>() {
 
     private var listItems : MutableList<Item>
 
@@ -19,7 +19,7 @@ class MainPageAdapter : RecyclerView.Adapter<MainPageAdapter.MainPageAdapterView
         listItems = mutableListOf()// doing this for now?
     }
 
-    class MainPageAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class MainPageAdapterViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         val itemText = itemView.findViewById<TextView>(R.id.tv_list_item)
     }
 

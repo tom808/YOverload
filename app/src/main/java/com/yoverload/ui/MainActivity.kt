@@ -1,11 +1,11 @@
 package com.yoverload.ui
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -22,7 +22,7 @@ class MainActivity() : AppCompatActivity() {
 
     private val TAG = "MainActivity"
     private val mAdapter = MainPageAdapter()
-    private var mRecyclerView: RecyclerView? = null
+    private var mRecyclerView: androidx.recyclerview.widget.RecyclerView? = null
     private val pgProgress: ProgressBar by lazy {
         findViewById<ProgressBar>(R.id.main_progress_bar)
     }
@@ -47,7 +47,7 @@ class MainActivity() : AppCompatActivity() {
     }
 
     private fun setUpRecyclerView() {
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
 
         setContentView(R.layout.main_layout)
         mRecyclerView = findViewById(R.id.rv_main_items)
