@@ -1,10 +1,8 @@
 package com.yoverload.ui
 
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
@@ -34,11 +32,11 @@ class MainActivity() : AppCompatActivity() {
 
         setUpRecyclerView()
 
-        mViewModel.getTopStories().observe(this, Observer { items ->
-            mAdapter.setPageData(items)
-            pgProgress.visibility = View.GONE
-            mRecyclerView?.visibility = View.VISIBLE
-        })
+//        mViewModel.getTopStories().observe(this, Observer { items ->
+//            mAdapter.setPageData(items)
+//            pgProgress.visibility = View.GONE
+//            mRecyclerView?.visibility = View.VISIBLE
+//        })
     }
 
     private fun setUpRecyclerView() {

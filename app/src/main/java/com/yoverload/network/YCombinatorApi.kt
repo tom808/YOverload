@@ -12,17 +12,17 @@ import retrofit2.http.Query
 /**
  * Created by tom.egan on 03-Jan-2019.
  */
-interface YCombinatorService {
+interface YCombinatorApi {
 
     companion object {
         private const val BASE_URL: String = "https://hacker-news.firebaseio.com/v0/"
 
-        operator fun invoke(): YCombinatorService {
+        operator fun invoke(): YCombinatorApi {
             return Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(MoshiConverterFactory.create())
                     .build()
-                    .create(YCombinatorService::class.java)
+                    .create(YCombinatorApi::class.java)
         }
     }
 

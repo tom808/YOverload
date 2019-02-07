@@ -8,5 +8,5 @@ import com.yoverload.data.ItemRepository
  */
 class MainPageViewModel(private val itemRepo: ItemRepository) : ViewModel() {
 
-    fun getTopStories() = itemRepo.getTopStories()
+    fun getTopStories() = itemRepo.getTopStoryIds() //itemRepo.getTopStories()
 }

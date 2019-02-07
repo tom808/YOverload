@@ -17,4 +17,7 @@ interface ItemDao {
 
     @Query("SELECT * FROM items")
     fun loadAll(): LiveData<List<Item>>
+
+    @Query("Select * FROM items WHERE id IN (:items)")
+    fun loadSelected(items: List<Int>) : List<Item>
 }
