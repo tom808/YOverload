@@ -6,6 +6,7 @@ import android.util.Log
 import com.yoverload.data.db.Item
 import com.yoverload.data.db.ItemDatabase
 import com.yoverload.network.YCombinatorService
+import org.jetbrains.anko.doAsync
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,10 +20,10 @@ class ItemRepository private constructor(context: Context) {
 
     private val itemDb : ItemDatabase = ItemDatabase.getInstance(context)
 
-    private val data = MutableLiveData<MutableList<Item>>()
+    private val dataCache = MutableLiveData<MutableList<Item>>()
 
     init {
-        data.value = mutableListOf()
+        dataCache.value = mutableListOf()
     }
 
     companion object {
@@ -49,11 +50,10 @@ class ItemRepository private constructor(context: Context) {
             override fun onResponse(call: Call<List<Int>>?, response: Response<List<Int>>) {
                 val items: List<Int> = response.body()!!
                 items.forEach { getItem(it) }
-
             }
         })
 
-        return data
+        return dataCache
     }
 
     fun getItem(itemNum: Int) {
@@ -64,9 +64,13 @@ class ItemRepository private constructor(context: Context) {
             }
 
             override fun onResponse(call: Call<Item>, response: Response<Item>) {
-                val item: Item = response.body()!!
-                data.value?.add(item)
-                data.value = data.value // so we actually notify observers
+                response.body()?.let {
+                    doAsync {
+                        itemDb.itemDao().save(it)
+                    }
+                    dataCache.value?.add(it)
+                    dataCache.value = dataCache.value
+                }
             }
         })
     }

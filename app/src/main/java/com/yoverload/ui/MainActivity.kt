@@ -18,9 +18,6 @@ import com.yoverload.R
  */
 class MainActivity() : AppCompatActivity() {
 
-    private var itemCount = 0
-
-    private val TAG = "MainActivity"
     private val mAdapter = MainPageAdapter()
     private var mRecyclerView: androidx.recyclerview.widget.RecyclerView? = null
     private val pgProgress: ProgressBar by lazy {
@@ -38,16 +35,14 @@ class MainActivity() : AppCompatActivity() {
         setUpRecyclerView()
 
         mViewModel.getTopStories().observe(this, Observer { items ->
-            items?.let {
-                mAdapter.setPageData(items)
-                pgProgress.visibility = View.GONE
-                mRecyclerView?.visibility = View.VISIBLE
-            }
+            mAdapter.setPageData(items)
+            pgProgress.visibility = View.GONE
+            mRecyclerView?.visibility = View.VISIBLE
         })
     }
 
     private fun setUpRecyclerView() {
-        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
         setContentView(R.layout.main_layout)
         mRecyclerView = findViewById(R.id.rv_main_items)

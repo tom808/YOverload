@@ -12,11 +12,7 @@ import com.yoverload.data.db.Item
  */
 class MainPageAdapter : androidx.recyclerview.widget.RecyclerView.Adapter<MainPageAdapter.MainPageAdapterViewHolder>() {
 
-    private var listItems : MutableList<Item>
-
-    init {
-        listItems = mutableListOf()// doing this for now?
-    }
+    private var listItems : List<Item> = listOf()
 
     class MainPageAdapterViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         val itemText = itemView.findViewById<TextView>(R.id.tv_list_item)
@@ -34,13 +30,8 @@ class MainPageAdapter : androidx.recyclerview.widget.RecyclerView.Adapter<MainPa
         viewHolder.itemText.text = listItems.get(position).title
     }
 
-    fun setPageData (items: MutableList<Item>) {
+    fun setPageData (items: List<Item>) {
         listItems = items
-        notifyDataSetChanged()
-    }
-
-    fun setPageData (item: Item) {
-        listItems.add(item)
         notifyDataSetChanged()
     }
 }
