@@ -8,8 +8,8 @@ interface YCNetworkDataSource {
     val downloadedTopStoryIds : LiveData<List<Int>>
     val downloadedItemData : LiveData<List<Item>>
 
-    fun getTopStoryIds()
+    suspend fun getTopStoryIds()
 
-    fun getItems(itemIds: List<Int>)
+    suspend fun getItems(itemIds: List<Int>)
 
 }

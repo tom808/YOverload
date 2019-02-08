@@ -1,17 +1,21 @@
 package com.yoverload.data
 
 import android.content.Context
+import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.yoverload.data.db.Item
 import com.yoverload.data.db.ItemDatabase
 import com.yoverload.network.YCNetworkDataSource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Created by tom.egan on 04-Jan-2019.
  */
-class ItemRepository private constructor(context: Context, val networkData: YCNetworkDataSource, val itemDatabase: ItemDatabase) {
-
-    private val TAG = "ItemRepository"
+class ItemRepository private constructor(private val networkData: YCNetworkDataSource, private val itemDatabase: ItemDatabase) {
 
     private val dataCache = MutableLiveData<MutableList<Item>>()
 
@@ -19,35 +23,52 @@ class ItemRepository private constructor(context: Context, val networkData: YCNe
         dataCache.value = mutableListOf()
         networkData.apply {
             downloadedTopStoryIds.observeForever {
-//                calcMissingItemIds(it)
+                calcMissingItemIds(it)
             }
-         }
+            downloadedItemData.observeForever {
+                insertItems(it)
+            }
+        }
+    }
+
+    private fun insertItems(items: List<Item>) {
+        GlobalScope.launch(Dispatchers.IO) {
+            itemDatabase.itemDao().insertAll(items)
+        }
     }
 
     companion object {
         @Volatile
         private var instance: ItemRepository? = null
 
-        fun getInstance(context: Context, networkData: YCNetworkDataSource, database: ItemDatabase) =
+        fun getInstance(networkData: YCNetworkDataSource, database: ItemDatabase) =
                 instance ?: synchronized(this) {
-                    instance ?: ItemRepository(context, networkData, database).also { instance = it }
+                    instance
+                            ?: ItemRepository(networkData, database).also { instance = it }
                 }
     }
 
-    fun getTopStoryIds() {
+    private suspend fun updateTopStories() {
         networkData.getTopStoryIds()
     }
 
-//    fun calcMissingItemIds(items : List<Int>) {
-//        doAsync {
-//            val itemsInDb = itemDatabase.itemDao().loadSelected(items)
-//            val itemsIds = itemsInDb.map { it.id }
-//            val missingItemIds = items.minus(itemsIds)
-//            if (missingItemIds.isNotEmpty()) {
-//                networkData.getItems(missingItemIds)
-//            }
-//        }
-//    }
+    suspend fun getTopStoryIds() : LiveData<List<Item>> {
+        return withContext(Dispatchers.IO) {
+            updateTopStories()
+            return@withContext itemDatabase.itemDao().loadAll()
+        }
+    }
+
+    private fun calcMissingItemIds(items: List<Int>) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val itemsInDb = itemDatabase.itemDao().loadSelected(items)
+            val itemsIds = itemsInDb.map { it.id }
+            val missingItemIds = items.minus(itemsIds)
+            if (missingItemIds.size > 10) {
+                networkData.getItems(missingItemIds.subList(0,10))
+            }
+        }
+    }
 
 //    fun getTopStories(): MutableLiveData<MutableList<Item>> {
 //

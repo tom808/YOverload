@@ -8,13 +8,17 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
+import androidx.lifecycle.Observer
 import com.yoverload.di.InjectorUtils
 import com.yoverload.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * Created by tom.egan on 03-Jan-2019.
  */
-class MainActivity() : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private val mAdapter = MainPageAdapter()
     private var mRecyclerView: androidx.recyclerview.widget.RecyclerView? = null
@@ -31,12 +35,6 @@ class MainActivity() : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setUpRecyclerView()
-
-//        mViewModel.getTopStories().observe(this, Observer { items ->
-//            mAdapter.setPageData(items)
-//            pgProgress.visibility = View.GONE
-//            mRecyclerView?.visibility = View.VISIBLE
-//        })
     }
 
     private fun setUpRecyclerView() {
@@ -54,13 +52,24 @@ class MainActivity() : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.action_refresh) {
-            pgProgress.visibility = View.VISIBLE
-            mRecyclerView?.visibility = View.GONE
-            mViewModel.getTopStories()
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_refresh -> {
+                pgProgress.visibility = View.VISIBLE
+                mRecyclerView?.visibility = View.GONE
+                refreshList()
+            }
         }
         return true
+    }
+
+    private fun refreshList() = GlobalScope.launch(Dispatchers.Main) {
+        val topStories = mViewModel.topStories.await()
+        topStories.observe(this@MainActivity, Observer { items ->
+            mAdapter.setPageData(items)
+            pgProgress.visibility = View.GONE
+            mRecyclerView?.visibility = View.VISIBLE
+        })
     }
 
 }

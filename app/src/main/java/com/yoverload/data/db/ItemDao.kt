@@ -20,4 +20,7 @@ interface ItemDao {
 
     @Query("Select * FROM items WHERE id IN (:items)")
     fun loadSelected(items: List<Int>) : List<Item>
+
+    @Insert(onConflict = REPLACE)
+    fun insertAll(items: List<Item>?)
 }

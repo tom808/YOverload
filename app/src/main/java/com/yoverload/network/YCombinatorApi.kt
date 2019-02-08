@@ -1,7 +1,8 @@
 package com.yoverload.network
 
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.yoverload.data.db.Item
-import retrofit2.Call
+import kotlinx.coroutines.Deferred
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
@@ -20,6 +21,7 @@ interface YCombinatorApi {
         operator fun invoke(): YCombinatorApi {
             return Retrofit.Builder()
                     .baseUrl(BASE_URL)
+                    .addCallAdapterFactory(CoroutineCallAdapterFactory())
                     .addConverterFactory(MoshiConverterFactory.create())
                     .build()
                     .create(YCombinatorApi::class.java)
@@ -28,14 +30,14 @@ interface YCombinatorApi {
 
     // The current largest item id is at /v0/maxitem. You can walk backward from here to discover all items.
     @GET("maxitem.json")
-    fun getLatest(@Query("print") print: String = "pretty"): Call<Int>
+    fun getLatest(@Query("print") print: String = "pretty"): Deferred<Int>
 
     // Get up to 500 top stories
     @GET("topstories.json")
-    fun topStories(@Query("print") print: String = "pretty"): Call<List<Int>>
+    fun topStories(@Query("print") print: String = "pretty"): Deferred<List<Int>>
 
     // Stories, comments, jobs, Ask HNs and even polls are just items.
     // They're identified by their ids, which are unique integers, and live under /v0/item/<id>
     @GET("item/{item}.json")
-    fun getItem(@Path("item") item: Int, @Query("print") print: String = "pretty"): Call<Item>
+    fun getItem(@Path("item") item: Int, @Query("print") print: String = "pretty"): Deferred<Item>
 }

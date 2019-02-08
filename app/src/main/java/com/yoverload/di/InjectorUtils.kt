@@ -14,7 +14,7 @@ object InjectorUtils {
     fun provideMainPageViewModelFactory(context: Context): MainPageViewModelFactory {
         val YCNetworkDataSource = YCNetworkDataSourceImpl(YCombinatorApi())
         val db = ItemDatabase.getInstance(context)
-        val repository = ItemRepository.getInstance(context,YCNetworkDataSource, db)
+        val repository = ItemRepository.getInstance(YCNetworkDataSource, db)
         return MainPageViewModelFactory(repository)
     }
 
