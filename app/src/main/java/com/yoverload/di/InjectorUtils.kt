@@ -12,9 +12,9 @@ import com.yoverload.network.YCombinatorApi
 object InjectorUtils {
 
     fun provideMainPageViewModelFactory(context: Context): MainPageViewModelFactory {
-        val YCNetworkDataSource = YCNetworkDataSourceImpl(YCombinatorApi())
+        val networkDataSource = YCNetworkDataSourceImpl(YCombinatorApi(context))
         val db = ItemDatabase.getInstance(context)
-        val repository = ItemRepository.getInstance(YCNetworkDataSource, db)
+        val repository = ItemRepository.getInstance(networkDataSource, db)
         return MainPageViewModelFactory(repository)
     }
 

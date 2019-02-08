@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setUpRecyclerView()
+        refreshList()
     }
 
     private fun setUpRecyclerView() {
